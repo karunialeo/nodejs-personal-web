@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+  --blue: #246084;
+  --white: #f4f3f3;
+  --lightgray: #b4b4b4;
+  --gray: #777;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+}
+
+.bg-var-blue {
+  background-color: var(--blue);
+}
+
+.bg-blue-transparent {
+  background-color: #245f84c5;
+}
+
+.bg-var-white {
+  background-color: var(--white);
+}
+
+.bg-white-transparent-low {
+  background-color: #f4f3f3a1;
+}
+
+.bg-white-transparent-high {
+  background-color: #f4f3f3c4;
+}
+
+.border-none {
+  border: none !important;
+}
+
+.border-var-white {
+  border: 1px solid var(--white);
+}
+
+.text-var-blue {
+  color: var(--blue) !important;
+}
+
+.text-var-white {
+  color: var(--white) !important;
+}
+
+.text-var-gray {
+  color: var(--gray) !important;
+}
+
+.active {
+  font-weight: bold;
+}
+
+.filter-white {
+  filter: brightness(0) invert(1);
+}
+
+body {
+  background-image: url(../img/nature-grayscale.jpg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-attachment: fixed;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    background-image: url(../img/leo-bass-2.png);
+    background-position-y: 42vh;
+  }
+}
+
+.body-container {
+  background-color: #032f4da6;
+  min-height: 100vh;
+}
+
+.social-section li {
+  transition: all 0.5s ease;
+}
+
+.social-section li:hover {
+  background-color: var(--white);
+}

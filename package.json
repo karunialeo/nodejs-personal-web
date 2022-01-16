@@ -1,0 +1,19 @@
+{
+  "name": "personal-blog-karunialeo",
+  "version": "1.0.0",
+  "description": "Personal Blog Karunia Leo Gultom",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon ./bin/www",
+    "start-dev": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karunia Leo Gultom",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "hbs": "^4.2.0",
+    "lorem-ipsum": "^2.0.4",
+    "pg": "^8.7.1"
+  }
+}
