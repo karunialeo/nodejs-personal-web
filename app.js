@@ -48,7 +48,17 @@ let blogs = [
 // ROUTE METHOD GET
 
 app.get('/', (req, res) => {
-    res.render('index', {isLogin})
+    db.connect((err, client, done) => {
+        if (err) throw err
+        
+        client.query('SELECT * FROM tb_exp', function(err, result) {
+            if (err) throw err
+
+            let dbData = result.rows
+
+            res.render('index', {isLogin, exps : dbData})
+        })
+    })
 })
 
 app.get('/contact', (req, res) => {
@@ -68,9 +78,7 @@ app.get('/blog', (req, res) => {
                     ...dbData,
                     isLogin,
                     author: 'Karunia Leo Gultom',
-                    postFullTime: function() {
-                        return getFullTime(dbData.postAt)
-                    },
+                    postFullTime: getFullTime(dbData.postAt),
                     distanceTime: getDistanceTime(dbData.postAt),
                 }
             })
@@ -82,86 +90,93 @@ app.get('/blog', (req, res) => {
 
 app.get('/blog-detail/:id', (req, res) => {
     let id = req.params.id
-    res.render('blog-detail', {isLogin, blog : {
-        id : id,
-        title : 'Welcome to my Website',
-        author : 'Karunia Leo Gultom',
-        postAt: new Date(),
-        postFullTime: function() {
-            return getFullTime(this.postAt)
-        },
-        distanceTime: function() {
-            return getDistanceTime(this.postAt)
-        },
-        content : lorem.generateSentences(10)
-    }})
+    
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        client.query(`SELECT * FROM tb_blog WHERE id = ${id}`, (err, result) => {
+            if (err) throw err
+
+            let dbData = result.rows[0]
+
+            res.render('blog-detail', { id, blog: dbData})
+        })
+    })
 })
 
 app.get('/add-blog',(req, res) => {
     res.render('add-blog', {isLogin})
 })
 
-app.get('/edit-blog/:index',(req, res) => {
-    let index = req.params.index
+app.get('/edit-blog/:id',(req, res) => {
+    let id = req.params.id
 
-    res.render('edit-blog', {
-        title: blogs[index].title,
-        content: blogs[index].content,
-        index,
-        isLogin
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        client.query(`SELECT * FROM tb_blog WHERE id = ${id}`, (err, result) => {
+            if (err) throw err
+
+            let dbData = result.rows[0]
+
+            res.render('edit-blog', {
+                title: dbData.title,
+                content: dbData.content,
+                id,
+                isLogin
+            })
+        })
     })
 })
 
-app.get('/delete/:index', (req, res) => {
-    let index = req.params.index
+app.get('/delete/:id', (req, res) => {
+    let id = req.params.id
 
-    blogs.splice(index, 1)
+    let query = `DELETE FROM tb_blog WHERE id = ${id}`
 
-    res.redirect('/blog')
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        client.query(query, (err, result) => {
+            if (err) throw err
+
+            res.redirect('/blog')
+        })
+    })
 })
 
 // ROUTE METHOD POST
 
 app.post('/blog', (req, res) => {
     let data = req.body
+    let query = `INSERT INTO tb_blog (title, content, image) VALUES ('${data.inputTitle}', '${data.inputContent}', 'image.png')`
 
-    data = {
-        title: data.inputTitle,
-        postAt: new Date(),
-        postFullTime: function() {
-            return getFullTime(this.postAt)
-        },
-        distanceTime: function() {
-            return getDistanceTime(this.postAt)
-        },
-        author: 'Karunia Leo Gultom',
-        content: data.inputContent,
-    }
+    db.connect((err, client, done) => {
+        if (err) throw err
 
-    blogs.push(data)
+        client.query(query, (err, result) => {
+            if (err) throw err
 
-    res.redirect('/blog')
+            res.redirect('/blog')
+        })
+    })
 })
 
-app.post('/edit-blog/:index', (req, res) => {
+app.post('/edit-blog/:id', (req, res) => {
     let data = req.body
+    let id = req.params.id
 
-    index = req.params.index
-
-    data = {
-        title: data.inputTitle,
-        postTime: new Date(),
-        postAt: getFullTime(new Date()),
-        distanceTime: function() {
-            return getDistanceTime(this.postTime)
-        },
-        author: 'Karunia Leo Gultom',
-        content: data.inputContent,
-    }
-
-    blogs[index] = data
+    query = `UPDATE tb_blog SET title='${data.inputTitle}', content='${data.inputContent}' WHERE id='${id}'`
     
-    res.redirect('/blog')
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        client.query(query, (err, result) => {
+            if (err) throw err
+
+            res.redirect('/blog')
+        })
+    })
 })
 
 app.listen(port, () => {

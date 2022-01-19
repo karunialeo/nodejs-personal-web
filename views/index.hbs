@@ -129,16 +129,13 @@
                 </tr>
               </thead>
               <tbody>
+                {{#each exps}}
                 <tr>
-                  <th scope="row">1</th>
-                  <td colspan="2">Develop Personal Website</td>
-                  <td>2021</td>
+                  <th scope="row">{{this.id}}</th>
+                  <td colspan="2">{{this.experience}}</td>
+                  <td>{{this.year}}</td>
                 </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td colspan="2">Fullstack Developer</td>
-                  <td>2022</td>
-                </tr>
+                {{/each}}
               </tbody>
             </table>
           </div>
