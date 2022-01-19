@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Day 4 | Karunia Leo Gultom</title>
+    <title>Add Blog | Karunia Leo Gultom</title>
 
     <!-- Bootstrap -->
     <link
@@ -16,6 +16,7 @@
 
     <!-- Developer CSS -->
     <link rel="stylesheet" href="../public/css/main.css" />
+    <link rel="stylesheet" href="../public/css/nav.css" />
     <link rel="stylesheet" href="../public/css/add-blog.css" />
 
     <!-- Favicon -->
@@ -62,6 +63,21 @@
             </div>
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1">
+                {{#if isLogin}}
+                <li class="nav-item ps-lg-4 py-2">
+                  <span class="nav-link text-var-white">Hello, {{user.name}}!</span>
+                </li>
+                <li class="nav-item ps-lg-4 py-2">
+                  <a class="nav-link text-var-white" href="/logout">Logout</a>
+                </li>
+                {{else}}
+                <li class="nav-item ps-lg-4 py-2">
+                  <a class="nav-link text-var-white" href="/register">Register</a>
+                </li>
+                <li class="nav-item ps-lg-4 py-2">
+                  <a class="nav-link text-var-white" href="/login">Login</a>
+                </li>
+                {{/if}}
                 <li class="nav-item ps-lg-4 py-2">
                   <a class="nav-link text-var-white" href="/">Home</a>
                 </li>

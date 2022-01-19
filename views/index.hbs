@@ -3,7 +3,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Day 4 | Karunia Leo Gultom</title>
+    <title>Home | Karunia Leo Gultom</title>
 
     <!-- Bootstrap -->
     <link
@@ -67,6 +67,21 @@
             </div>
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1">
+                {{#if isLogin}}
+                <li class="nav-item ps-lg-4 py-2">
+                  <span class="nav-link text-var-white">Hello, {{user.name}}!</span>
+                </li>
+                <li class="nav-item ps-lg-4 py-2">
+                  <a class="nav-link text-var-white" href="/logout">Logout</a>
+                </li>
+                {{else}}
+                <li class="nav-item ps-lg-4 py-2">
+                  <a class="nav-link text-var-white" href="/register">Register</a>
+                </li>
+                <li class="nav-item ps-lg-4 py-2">
+                  <a class="nav-link text-var-white" href="/login">Login</a>
+                </li>
+                {{/if}}
                 <li class="nav-item ps-lg-4 py-2">
                   <a
                     class="nav-link text-var-white active"
@@ -99,6 +114,14 @@
       <!-- Content Start -->
 
       <div class="container-fluid main-content bg-transparent">
+        {{#if messages.success}}
+        <div class="row">
+          <div class="alert alert-success col-4 offset-4 mt-3" role="alert">
+            {{messages.success}}
+          </div>
+        </div>
+        {{/if}}
+
         <div
           class="container-sm-fluid container-lg d-lg-flex justify-content-lg-between"
         >
