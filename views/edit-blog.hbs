@@ -7,7 +7,7 @@
 >
   <div class="container-form col-lg-5 col-md-6 col-sm-12 my-5">
     <h2 class="text-center text-var-white fw-bold">Edit Blog</h2>
-    <form id="editBlog" class="mt-4 text-var-white" action="/edit-blog/{{id}}" method="POST">
+    <form id="editBlog" class="mt-4 text-var-white" action="/edit-blog/{{id}}" method="POST" enctype="multipart/form-data">
       <div class="mb-3">
         <label for="inputTitle" class="form-label"
           >Title</label
@@ -30,7 +30,7 @@
 
       <div class="mb-3">
         <label
-          for="inputBlogImage"
+          for="inputImage"
           class="form-label"
         >
           Upload Image
@@ -38,8 +38,8 @@
         <input
           class="form-control"
           type="file"
-          id="inputBlogImage"
-          name="inputBlogImage"
+          id="inputImage"
+          name="inputImage"
         />
       </div>
 

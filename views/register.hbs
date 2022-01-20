@@ -7,26 +7,40 @@
 >
   <div class="container-form col-lg-4 col-md-5 col-sm-12 my-5">
     <h2 class="text-center text-var-white fw-bold">Register</h2>
+    {{#if messages.danger}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{messages.danger}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {{/if}}
     <form class="mt-4 text-var-white" action="/register" method="POST">
       <div class="mb-3">
         <label for="inputName" class="form-label"
           >Name</label
         >
-        <input name="inputName" type="text" class="form-control" id="inputName" autofocus/>
+        <input name="inputName" type="text" class="form-control" id="inputName" value="{{inputName}}" autofocus required/>
       </div>
       
       <div class="mb-3">
         <label for="inputEmail" class="form-label"
           >Email</label
         >
-        <input name="inputEmail" type="email" class="form-control" id="inputEmail" />
+        <input name="inputEmail" type="email" class="form-control" id="inputEmail" value="{{inputEmail}}" required/>
       </div>
       
       <label for="inputPassword" class="form-label">Password</label>
       <div class="input-group mb-3">
-        <input name="inputPassword" type="password" class="form-control" id="inputPassword" aria-describedby="toggleVisiblePassword">
-        <button class="btn bg-var-white btn-outline-success" type="button" id="toggleVisiblePassword">
+        <input name="inputPassword" type="password" class="form-control" id="inputPassword" aria-describedby="toggleVisiblePassword" required>
+        <button class="btn bg-var-white text-var-gray btn-outline-none" type="button" id="toggleVisiblePassword" tabindex="-1">
           <i id="toggleVisibilityIcon" class="bi bi-eye-slash-fill"></i>
+        </button>
+      </div>
+      
+      <label for="confirmPassword" class="form-label">Confirm Password</label>
+      <div class="input-group mb-3">
+        <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" aria-describedby="toggleVisibleConfirm" required>
+        <button class="btn bg-var-white text-var-gray btn-outline-none" type="button" id="toggleVisibleConfirm" tabindex="-1">
+          <i id="toggleVisibilityIconConfirm" class="bi bi-eye-slash-fill"></i>
         </button>
       </div>
 

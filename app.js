@@ -8,6 +8,9 @@ const hbs = require('hbs');
 app.set('view engine', 'hbs')
 hbs.registerPartials(__dirname + '/views/partials');
 
+// multer
+const upload = require('./middlewares/fileUpload')
+
 // import bcrypt password encryption
 const bcrypt = require('bcrypt')
 
@@ -135,14 +138,16 @@ app.get('/blog-detail/:id', (req, res) => {
     db.connect((err, client, done) => {
         if (err) throw err
 
-        client.query(`SELECT * FROM tb_blog WHERE id = ${id}`, (err, result) => {
+        const query = `SELECT tb_blog.id, tb_blog.title, tb_blog.content, tb_blog.post_at, tb_blog.image, tb_user.name AS author,
+        tb_blog.author_id FROM tb_blog LEFT JOIN tb_user ON tb_blog.author_id = tb_user.id WHERE tb_blog.id = ${id}`
+
+        client.query(query, (err, result) => {
             if (err) throw err
 
             let blogData = result.rows[0]
             blogData = {
                 ...blogData,
                 isLogin : req.session.isLogin,
-                author : 'Karunia Leo Gultom',
                 postFullTime : getFullTime(blogData.post_at)
             }
 
@@ -158,6 +163,12 @@ app.get('/blog-detail/:id', (req, res) => {
 })
 
 app.get('/add-blog',(req, res) => {
+    if(!req.session.isLogin) {
+        req.flash('danger', 'Error 403. Access denied.')
+        res.redirect('/login')
+        return
+    }
+
     res.render('add-blog', {
         isLogin : req.session.isLogin,
         user : req.session.user,
@@ -166,6 +177,12 @@ app.get('/add-blog',(req, res) => {
 })
 
 app.get('/edit-blog/:id',(req, res) => {
+    if(!req.session.isLogin) {
+        req.flash('danger', 'Error 403. Access denied.')
+        res.redirect('/login')
+        return
+    }
+
     let id = req.params.id
 
     db.connect((err, client, done) => {
@@ -189,6 +206,12 @@ app.get('/edit-blog/:id',(req, res) => {
 })
 
 app.get('/delete/:id', (req, res) => {
+    if(!req.session.isLogin) {
+        req.flash('danger', 'Error 403. Access denied.')
+        res.redirect('/login')
+        return
+    }
+
     let id = req.params.id
 
     let query = `DELETE FROM tb_blog WHERE id = ${id}`
@@ -207,23 +230,41 @@ app.get('/delete/:id', (req, res) => {
 // ROUTE METHOD POST
 
 app.post('/register', (req, res) => {
-    const {inputName, inputEmail, inputPassword} = req.body
+    const {inputName, inputEmail, inputPassword, confirmPassword} = req.body
 
     const hashedPassword = bcrypt.hashSync(inputPassword, 10)
 
+    const selectQuery = `SELECT * FROM tb_user WHERE email='${inputEmail}'`
+
     let query = `INSERT INTO tb_user (name, email, password)
                     VALUES ('${inputName}', '${inputEmail}', '${hashedPassword}')`
-
-    db.connect((err, client, done) => {
-        if (err) throw err
-
-        client.query(query, (err, result) => {
+    
+    if(inputPassword != confirmPassword) {
+        req.flash('danger', 'Password mismatch!')
+        res.redirect('/register')
+        return
+    } else {
+        db.connect((err, client, done) => {
             if (err) throw err
 
-            req.flash('success', 'Successfully Registered.')
-            res.redirect('/login')
+            client.query(selectQuery, (err, result) => {
+                if (err) throw err
+
+                if(result.rows.length != 0) {
+                    req.flash('danger', 'Email already registered!')
+                    res.redirect('/register')
+                    return
+                } else {
+                    client.query(query, (err, result) => {
+                        if (err) throw err
+
+                        req.flash('success', 'Successfully Registered.')
+                        res.redirect('/login')
+                    })
+                }
+            })
         })
-    })
+    }
 })
 
 app.post('/login', (req, res) => {
@@ -265,13 +306,15 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.post('/blog', (req, res) => {
+app.post('/blog', upload.single('inputImage'), (req, res) => {
     let data = req.body
 
     let authorId = req.session.user.id
 
+    let image = req.file.filename
+
     let query = `INSERT INTO tb_blog (title, content, image, author_id) 
-                    VALUES ('${data.inputTitle}', '${data.inputContent}', 'image.png', '${authorId}')`
+                    VALUES ('${data.inputTitle}', '${data.inputContent}', '${image}', '${authorId}')`
 
     db.connect((err, client, done) => {
         if (err) throw err
@@ -284,11 +327,13 @@ app.post('/blog', (req, res) => {
     })
 })
 
-app.post('/edit-blog/:id', (req, res) => {
+app.post('/edit-blog/:id', upload.single('inputImage'), (req, res) => {
     let data = req.body
     let id = req.params.id
 
-    query = `UPDATE tb_blog SET title='${data.inputTitle}', content='${data.inputContent}'
+    let image = req.file.filename
+
+    let query = `UPDATE tb_blog SET title='${data.inputTitle}', content='${data.inputContent}', image='${image}'
                 WHERE id='${id}'`
     
     db.connect((err, client, done) => {
