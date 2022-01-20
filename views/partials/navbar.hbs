@@ -1,0 +1,77 @@
+<!-- Navbar Start -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+  <div class="container">
+    <a class="navbar-brand text-var-white h1" href="/">Karunia Leo Gultom</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar"
+    >
+      <div class="burger">
+        <div class="line-1"></div>
+        <div class="line-2"></div>
+        <div class="line-3"></div>
+      </div>
+    </button>
+    <div
+      class="offcanvas offcanvas-start bg-blue-transparent"
+      tabindex="-1"
+      id="offcanvasNavbar"
+      aria-labelledby="offcanvasNavbarLabel"
+    >
+      <div class="offcanvas-header">
+        <h5
+          class="offcanvas-title text-var-white"
+          id="offcanvasNavbarLabel"
+        >Menu</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1">
+          {{#if isLogin}}
+          <li class="nav-item ps-lg-4 py-2">
+            <span class="nav-link text-var-white">Hello, {{user.name}}!</span>
+          </li>
+          <li class="nav-item ps-lg-4 py-2">
+            <a class="nav-link text-var-white" href="/logout">Logout</a>
+          </li>
+          {{else}}
+          <li class="nav-item ps-lg-4 py-2">
+            <a class="nav-link text-var-white" href="/register">Register</a>
+          </li>
+          <li class="nav-item ps-lg-4 py-2">
+            <a class="nav-link text-var-white" href="/login">Login</a>
+          </li>
+          {{/if}}
+          <li class="nav-item ps-lg-4 py-2">
+            <a class="nav-link text-var-white" href="/">Home</a>
+          </li>
+          <li class="nav-item ps-lg-4 py-2">
+            <a class="nav-link text-var-white" href="/blog">Blog</a>
+          </li>
+          {{#if isLogin}}
+            <li class="nav-item ps-lg-4 py-2">
+              <a class="nav-link text-var-white" href="/add-blog">Add Blog</a>
+            </li>
+          {{/if}}
+          <li class="nav-item ps-lg-4 py-2">
+            <a
+              class="btn bg-transparent text-var-white border-var-white px-4"
+              href="/contact"
+            >Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Navbar End -->

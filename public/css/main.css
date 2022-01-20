@@ -79,6 +79,10 @@ body {
   min-height: 100vh;
 }
 
+.container-fluid {
+  min-height: 82vh;
+}
+
 .social-section li {
   transition: all 0.5s ease;
 }
