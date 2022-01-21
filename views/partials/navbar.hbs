@@ -56,12 +56,21 @@
           </li>
 
           {{#if isLogin}}
-          <li class="nav-item ps-lg-4 py-2">
+          <div class="dropdown d-flex align-items-center ps-lg-4">
+            <a class="bg-transparent text-decoration-none" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="nav-link text-var-white">Hi, {{user.name}}!</span>
+            </a>
+
+            <ul class="dropdown-menu bg-white-transparent-high" aria-labelledby="dropdownMenuLink">
+              <li class="text-center"><a class="nav-link text-dark" href="/logout">Logout</a></li>
+            </ul>
+          </div>
+          {{!-- <li class="nav-item ps-lg-4 py-2">
             <span class="nav-link text-var-white">Hello, {{user.name}}!</span>
           </li>
           <li class="nav-item ps-lg-4 py-2">
             <a class="nav-link text-var-white" href="/logout">Logout</a>
-          </li>
+          </li> --}}
           {{else}}
           <li class="nav-item ps-lg-4 py-2">
             <a class="nav-link text-var-white" href="/register">Register</a>

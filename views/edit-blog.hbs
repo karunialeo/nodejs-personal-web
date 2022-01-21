@@ -12,7 +12,7 @@
         <label for="inputTitle" class="form-label"
           >Title</label
         >
-        <input name="inputTitle" type="text" class="form-control" id="inputTitle" value="{{title}}" />
+        <input name="inputTitle" type="text" class="form-control" id="inputTitle" value="{{title}}" required/>
       </div>
 
       <div class="mb-3">
@@ -25,22 +25,30 @@
           id="inputContent"
           rows="5"
           name="inputContent"
+          required
         >{{content}}</textarea>
       </div>
 
-      <div class="mb-3">
-        <label
-          for="inputImage"
-          class="form-label"
-        >
-          Upload Image
-        </label>
-        <input
-          class="form-control"
-          type="file"
-          id="inputImage"
-          name="inputImage"
-        />
+      <div class="mb-3 d-flex">
+        <div class="col-5">
+          <img src="/public/img/uploads/{{image}}" id="prevImage" alt="" width="100%">
+        </div>
+        <div class="col-6 offset-1">
+          <label
+            for="inputImage"
+            class="form-label"
+          >
+            Upload Image
+          </label>
+          <input
+            class="form-control"
+            type="file"
+            id="inputImage"
+            name="inputImage"
+            onchange="readURL(this)"
+            required
+          />
+        </div>
       </div>
 
       <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">

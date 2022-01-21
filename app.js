@@ -1,7 +1,10 @@
 // app standard configuration
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || '5000'
+
+// access file system
+const fs = require('fs')
 
 // set view engine
 const hbs = require('hbs');
@@ -122,11 +125,17 @@ app.get('/blog', (req, res) => {
                 }
             })
 
+            let errMsg = null
+            if(newData.length == 0) {
+                errMsg = 'Blog is empty.'
+            }
+
             res.render('blog', {
                 pageTitle : 'Blog | ',
                 isLogin: req.session.isLogin,
                 user : req.session.user,
                 blogs : newData,
+                errMsg,
             })
         })
     })
@@ -147,7 +156,7 @@ app.get('/blog-detail/:id', (req, res) => {
             let blogData = result.rows[0]
             blogData = {
                 ...blogData,
-                isLogin : req.session.isLogin,
+                // isLogin : req.session.isLogin,
                 postFullTime : getFullTime(blogData.post_at)
             }
 
@@ -197,6 +206,7 @@ app.get('/edit-blog/:id',(req, res) => {
                 id,
                 title: dbData.title,
                 content: dbData.content,
+                image: dbData.image,
                 isLogin : req.session.isLogin,
                 user : req.session.user,
                 pageTitle : 'Edit Blog | ',
@@ -331,18 +341,27 @@ app.post('/edit-blog/:id', upload.single('inputImage'), (req, res) => {
     let data = req.body
     let id = req.params.id
 
+    console.log(data)
+
     let image = req.file.filename
 
-    let query = `UPDATE tb_blog SET title='${data.inputTitle}', content='${data.inputContent}', image='${image}'
-                WHERE id='${id}'`
+    let query = `UPDATE tb_blog SET title='${data.inputTitle}', content='${data.inputContent}', image='${image}' WHERE id='${id}'`
     
     db.connect((err, client, done) => {
         if (err) throw err
-
-        client.query(query, (err, result) => {
+        
+        client.query(`SELECT image FROM tb_blog WHERE id='${id}'`, (err, result) => {
             if (err) throw err
 
-            res.redirect('/blog')
+            oldImage = result.rows[0].image
+                
+            client.query(query, (err, result) => {
+                if (err) throw err
+
+                fs.unlinkSync(`./public/img/uploads/${oldImage}`)
+        
+                res.redirect('/blog')
+            })
         })
     })
 })
